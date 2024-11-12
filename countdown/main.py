@@ -15,6 +15,7 @@ class CountdownWidget(Widget):
     def __init__(self, *args, **kwargs):
         self._init_config()
         self._deadline = config.TIMER * config.SECONDS_IN_MIN
+        self._fullscreen = False
         self._timer = self._deadline
         self._running = False
         self._update_bind_properties()
@@ -55,6 +56,13 @@ class CountdownWidget(Widget):
         self._deadline += time
         self._update_bind_properties()
 
+    def _toggle_full_screen(self):
+        if self._fullscreen:
+            Window.fullscreen = False
+        else:
+            Window.fullscreen = 'auto'
+        self._fullscreen = not self._fullscreen
+
     @property
     def text_height(self, *_):
         return self.TEXT_FONT_SIZE * 2 + self.TEXT_MARGIN_TOP
@@ -76,6 +84,8 @@ class CountdownWidget(Widget):
                 self._adjust_time(config.SECONDS_IN_MIN)
             case config.REMOVE_MINUTE_KEYCODE:
                 self._adjust_time(-config.SECONDS_IN_MIN)
+            case config.FULLSCREEN_KYCODE:
+                self._toggle_full_screen()
 
 
 class CountdownApp(App):
