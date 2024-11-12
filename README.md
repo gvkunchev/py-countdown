@@ -20,4 +20,10 @@ python -m pip install -r requirements.txt
 ```
 python countdown/main.py
 ```
+* Usage
+    * <Spacebar> - Pause/Start the timer
+    * <F> - Toggle full screen mode
+    * <R> - Reset using the default time as per the config file
+    * <+> - Add one minute to the timer
+    * <-> - Remove one minute from the timer
 
