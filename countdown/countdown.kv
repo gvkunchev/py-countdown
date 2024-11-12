@@ -82,3 +82,18 @@
             Rectangle:
                 pos: self.pos
                 size: self.size[0], self.size[1] * root.process_percent
+
+<ExitPopup>:
+    title: 'Потвърждение'
+    size_hint: (None, None)
+    size: (400, 200)
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Наистина ли искаш да затвориш?'
+        Button:
+            text: "Да"
+            on_press: root.exit()
+        Button:
+            text: "Не"
+            on_press: root.dismiss()

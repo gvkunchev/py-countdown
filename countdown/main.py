@@ -2,9 +2,16 @@ from kivy.app import App
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.properties import StringProperty, NumericProperty
+from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 
 import config
+
+
+class ExitPopup(Popup):
+
+    def exit(self):
+        app.stop()
 
 
 class CountdownWidget(Widget):
@@ -19,6 +26,7 @@ class CountdownWidget(Widget):
         self._timer = self._deadline
         self._running = False
         self._update_bind_properties()
+        self._exit_popup = ExitPopup()
         super().__init__(*args, **kwargs)
 
     def _init_config(self):
@@ -87,6 +95,9 @@ class CountdownWidget(Widget):
             case config.FULLSCREEN_KYCODE:
                 self._toggle_full_screen()
 
+    def on_request_close(self, *args, **kwargs):
+        self._exit_popup.open()
+        return True
 
 class CountdownApp(App):
     def build(self):
@@ -95,8 +106,10 @@ class CountdownApp(App):
         Window.bind(on_resize=countdown_widget.update_width)
         Window.bind(on_key_down=countdown_widget.on_key_down)
         Window.dispatch('on_resize', Window.width, Window.height)
+        Window.bind(on_request_close=countdown_widget.on_request_close)
         return countdown_widget
 
 
 if __name__ == '__main__':
-    CountdownApp().run()
+    app = CountdownApp()
+    app.run()
