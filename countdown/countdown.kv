@@ -41,6 +41,20 @@
             pos: self.x + self.LINE_MARGIN, self.height - self.LINE_MARGIN*2
             size: self.width - self.LINE_MARGIN*2, self.THIN_LINE_HEIGHT
 
+        # Pause icon
+        Color:
+            rgba: self.THEMED_TEXT_COLOR[:3] + (0 if self.running else 1,)
+        Rectangle:
+            pos: self.x + self.LINE_MARGIN, self.LINE_MARGIN*2 + self.ICONS_MARGIN
+            size: self.ICON_WIDTH, self.ICON_HEIGHT
+
+        # Pause icon mask
+        Color:
+            rgba: self.BACKGROUND_COLOR
+        Rectangle:
+            pos: self.x + self.LINE_MARGIN + self.ICON_WIDTH / 3, self.LINE_MARGIN*2 + self.ICONS_MARGIN
+            size: self.ICON_WIDTH / 3, self.ICON_HEIGHT
+
     # Static text for remaining time
     Label:
         color: root.THEMED_TEXT_COLOR
@@ -62,8 +76,6 @@
     # Progress bar image
     Image:
         source: 'logo.png'
-        allow_stretch: True
-        keep_ratio: True
         size_hint: None, None
         width: self.height
         height: (root.height - root.text_height - root.lines_height)
@@ -82,6 +94,7 @@
             Rectangle:
                 pos: self.pos
                 size: self.size[0], self.size[1] * root.process_percent
+
 
 <ExitPopup>:
     title: 'Потвърждение'

@@ -1,7 +1,7 @@
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.core.window import Window
-from kivy.properties import StringProperty, NumericProperty
+from kivy.properties import StringProperty, NumericProperty, BooleanProperty
 from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 
@@ -18,13 +18,13 @@ class CountdownWidget(Widget):
 
     timer_text = StringProperty("")
     process_percent = NumericProperty(1)
+    running = BooleanProperty(False)
 
     def __init__(self, *args, **kwargs):
         self._init_config()
         self._deadline = config.TIMER * config.SECONDS_IN_MIN
         self._fullscreen = False
         self._timer = self._deadline
-        self._running = False
         self._update_bind_properties()
         self._exit_popup = ExitPopup()
         super().__init__(*args, **kwargs)
@@ -43,17 +43,17 @@ class CountdownWidget(Widget):
 
     def _tick(self, *_):
         if not self._timer:
-            self._running = False
+            self.running = False
             return Clock.unschedule(self._tick)
         self._timer -= 1
         self._update_bind_properties()
 
     def _toggle_clock(self):
-        if self._running:
+        if self.running:
             Clock.unschedule(self._tick)
         else:
             Clock.schedule_interval(self._tick, 1)
-        self._running = not self._running
+        self.running = not self.running
 
     def _adjust_time(self, time):
         if self._timer == 0 and time < 0:
