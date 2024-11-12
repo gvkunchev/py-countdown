@@ -41,20 +41,6 @@
             pos: self.x + self.LINE_MARGIN, self.height - self.LINE_MARGIN*2
             size: self.width - self.LINE_MARGIN*2, self.THIN_LINE_HEIGHT
 
-        # Pause icon
-        Color:
-            rgba: self.THEMED_TEXT_COLOR[:3] + (0 if self.running else 1,)
-        Rectangle:
-            pos: self.x + self.LINE_MARGIN, self.LINE_MARGIN*2 + self.ICONS_MARGIN
-            size: self.ICON_WIDTH, self.ICON_HEIGHT
-
-        # Pause icon mask
-        Color:
-            rgba: self.BACKGROUND_COLOR
-        Rectangle:
-            pos: self.x + self.LINE_MARGIN + self.ICON_WIDTH / 3, self.LINE_MARGIN*2 + self.ICONS_MARGIN
-            size: self.ICON_WIDTH / 3, self.ICON_HEIGHT
-
     # Static text for remaining time
     Label:
         color: root.THEMED_TEXT_COLOR
@@ -95,6 +81,29 @@
                 pos: self.pos
                 size: self.size[0], self.size[1] * root.process_percent
 
+    # Pause icon
+    Widget:
+
+        pos: root.x + (root.width - self.width) / 2, root.lines_height
+        width: (root.height - root.text_height - root.lines_height)
+        height: (root.height - root.text_height - root.lines_height)
+
+        canvas:
+
+            Color:
+                rgba: root.THEMED_TEXT_COLOR[:3] + (0 if root.running else 1,)
+            RoundedRectangle:
+                pos: self.x + 2 * self.width / 8, self.y + self.height * 1/6
+                size: self.width / 8, self.height * 2/3
+                radius: root.PAUSE_ROUND_RADIUS
+
+            Color:
+                rgba: root.THEMED_TEXT_COLOR[:3] + (0 if root.running else 1,)
+            RoundedRectangle:
+                pos: self.x + 5 * self.width / 8, self.y + self.height * 1/6
+                size: self.width / 8, self.height * 2/3
+                radius: root.PAUSE_ROUND_RADIUS
+
 
 <ExitPopup>:
     title: 'Потвърждение'
@@ -107,6 +116,22 @@
         Button:
             text: "Да"
             on_press: root.exit()
+        Button:
+            text: "Не"
+            on_press: root.dismiss()
+
+
+<ResetPopup>:
+    title: 'Потвърждение'
+    size_hint: (None, None)
+    size: (450, 220)
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Наистина ли искаш да рестартираш таймера?'
+        Button:
+            text: "Да"
+            on_press: root.reset()
         Button:
             text: "Не"
             on_press: root.dismiss()

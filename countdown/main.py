@@ -14,6 +14,17 @@ class ExitPopup(Popup):
         app.stop()
 
 
+class ResetPopup(Popup):
+
+    def __init__(self, reset_cb, *args, **kwargs):
+        self.reset_cb = reset_cb
+        super().__init__(*args, **kwargs)
+
+    def reset(self):
+        self.reset_cb(confirmed=True)
+        self.dismiss()
+
+
 class CountdownWidget(Widget):
 
     timer_text = StringProperty("")
@@ -21,12 +32,11 @@ class CountdownWidget(Widget):
     running = BooleanProperty(False)
 
     def __init__(self, *args, **kwargs):
-        self._init_config()
-        self._deadline = config.TIMER * config.SECONDS_IN_MIN
         self._fullscreen = False
-        self._timer = self._deadline
-        self._update_bind_properties()
         self._exit_popup = ExitPopup()
+        self._reset_popup = ResetPopup(self.reset)
+        self._init_config()
+        self.reset(confirmed=True)
         super().__init__(*args, **kwargs)
 
     def _init_config(self):
@@ -71,6 +81,14 @@ class CountdownWidget(Widget):
             Window.fullscreen = 'auto'
         self._fullscreen = not self._fullscreen
 
+    def reset(self, confirmed=False):
+        if not confirmed:
+            self._reset_popup.open()
+        else:
+            self._deadline = config.TIMER * config.SECONDS_IN_MIN
+            self._timer = self._deadline
+            self._update_bind_properties()
+
     @property
     def text_height(self, *_):
         return self.TEXT_FONT_SIZE * 2 + self.TEXT_MARGIN_TOP
@@ -94,6 +112,8 @@ class CountdownWidget(Widget):
                 self._adjust_time(-config.SECONDS_IN_MIN)
             case config.FULLSCREEN_KYCODE:
                 self._toggle_full_screen()
+            case config.RESET_KYCODE:
+                self.reset()
 
     def on_request_close(self, *args, **kwargs):
         self._exit_popup.open()
