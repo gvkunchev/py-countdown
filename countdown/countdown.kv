@@ -1,0 +1,84 @@
+<CountdownWidget>:
+
+    size_hint_x: None
+    width: self.width
+    pos: self.pos
+
+    canvas:
+
+        # Background
+        Color:
+            rgba: self.BACKGROUND_COLOR
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+        # Thick horizontal line, bottom
+        Color:
+            rgba: self.LINE_COLOR
+        Rectangle:
+            pos: self.x + self.LINE_MARGIN, self.LINE_MARGIN
+            size: self.width - self.LINE_MARGIN*2, self.THICK_LINE_HEIGHT
+
+        # Thin horizontal line, bottom
+        Color:
+            rgba: self.LINE_COLOR
+        Rectangle:
+            pos: self.x + self.LINE_MARGIN, self.LINE_MARGIN*2
+            size: self.width - self.LINE_MARGIN*2, self.THIN_LINE_HEIGHT
+
+        # Thick horizontal line, top
+        Color:
+            rgba: self.LINE_COLOR
+        Rectangle:
+            pos: self.x + self.LINE_MARGIN, self.height - self.LINE_MARGIN
+            size: self.width - self.LINE_MARGIN*2, self.THICK_LINE_HEIGHT
+
+        # Thin horizontal line, top
+        Color:
+            rgba: self.LINE_COLOR
+        Rectangle:
+            pos: self.x + self.LINE_MARGIN, self.height - self.LINE_MARGIN*2
+            size: self.width - self.LINE_MARGIN*2, self.THIN_LINE_HEIGHT
+
+    # Static text for remaining time
+    Label:
+        color: root.THEMED_TEXT_COLOR
+        font_size: root.TEXT_FONT_SIZE
+        center_x: root.center_x
+        top: root.top - root.TEXT_MARGIN_TOP
+        bold: True
+        text: root.TIME_RAMAINING
+
+    # Dynamic text for remaining time
+    Label:
+        color: root.NORMAL_TEXT_COLOR
+        font_size: root.TEXT_FONT_SIZE
+        center_x: root.center_x
+        top: root.top - root.TEXT_MARGIN_TOP - root.TEXT_FONT_SIZE
+        bold: True
+        text: root.timer_text
+
+    # Progress bar image
+    Image:
+        source: 'logo.png'
+        allow_stretch: True
+        keep_ratio: True
+        size_hint: None, None
+        width: self.height
+        height: (root.height - root.text_height - root.lines_height)
+        pos: root.x + (root.width - self.width) / 2, root.lines_height
+
+    # Progress bar mask
+    Widget:
+
+        width: self.height
+        height: (root.height - root.text_height - root.lines_height)
+        pos: root.x + (root.width - self.width) / 2, root.lines_height
+
+        canvas:
+            Color:
+                rgba: root.MASK_COLOR
+            Rectangle:
+                pos: self.pos
+                size: self.size[0], self.size[1] * root.process_percent
